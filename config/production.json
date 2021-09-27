@@ -1,5 +1,5 @@
 {
-    "PORT": 5000,
-    "jwtSecret": "aforisoyb leo",
-    "mongoUri":"mongodb+srv://afrosiyob:2230102ab@cluster0.9m3qk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  "PORT": 5000,
+  "jwtSecret": "aforisoyb leo",
+  "mongoUri": "mongodb://127.0.0.1:27017/backendretry"
 }

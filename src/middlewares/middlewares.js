@@ -1,44 +1,48 @@
 
-const { validationResult } = require("express-validator");
-const { ApiError } = require("../errors/ApiError");
-const jwt = require("jsonwebtoken");
-const config = require("config");
-const { User } = require("../models/models");
+const { validationResult } = require( "express-validator" );
+const { ApiError } = require( "../errors/ApiError" );
+const jwt = require( "jsonwebtoken" );
+const config = require( "config" );
+const { User } = require( "../models/models" );
+const { logger } = require( "../logger/logger" );
 
 
-const validationError = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        next(ApiError.BadRequestError(errors.array(), "badrequest error"));
+const validationError = async ( req, res, next ) => {
+    const errors = validationResult( req );
+    if ( !errors.isEmpty() ) {
+        logger.error( errors.array(), "error" )
+        await next( ApiError.BadRequestError( errors.array(), "badrequest error" ) );
     } else {
         await next();
     }
 };
 
-const checkAuthToken = async (req, res, next) => {
-    if (req.method === "OPTIONS") {
+const checkAuthToken = async ( req, res, next ) => {
+    if ( req.method === "OPTIONS" ) {
         await next();
     } else {
         let token;
         if (
             req.headers.authorization &&
-            req.headers.authorization.startsWith("Bearer")
+            req.headers.authorization.startsWith( "Bearer" )
         ) {
-            token = req.headers.authorization.split(" ")[1]; // "Bearer TOKEN"
+            token = req.headers.authorization.split( " " )[ 1 ]; // "Bearer TOKEN"
         }
-        if (!token) {
-            await next(ApiError.UnauthorizedError("faild token", "auth error"));
+        if ( !token ) {
+            await next( ApiError.UnauthorizedError( "faild token", "auth error" ) );
         } else {
             try {
-                let decoded = jwt.verify(token, config.get("jwtSecret"));
+                let decoded = jwt.verify( token, config.get( "jwtSecret" ) );
                 req.user = decoded;
-                res.setHeader("Last-Modified", new Date().toUTCString());
+                res.setHeader( "Last-Modified", new Date().toUTCString() );
                 await next();
-            } catch (error) {
-                if (error instanceof jwt.TokenExpiredError) {
-                    next(ApiError.BadRequestError(error, "token  exparied"));
-                } else if (error instanceof jwt.JsonWebTokenError) {
-                    next(ApiError.BadRequestError(error, "invalid token"));
+            } catch ( error ) {
+                if ( error instanceof jwt.TokenExpiredError ) {
+                    logger.error( error, "token  exparied" )
+                    await next( ApiError.BadRequestError( error, "token  exparied" ) );
+                } else if ( error instanceof jwt.JsonWebTokenError ) {
+                    logger.error( error, "invalid token" )
+                    await next( ApiError.BadRequestError( error, "invalid token" ) );
                 }
             }
         }
@@ -46,17 +50,18 @@ const checkAuthToken = async (req, res, next) => {
 };
 
 // Check permissions
-const setPermissions = (permissions) => async (req, res, next) => {
+const setPermissions = ( permissions ) => async ( req, res, next ) => {
     const { userId } = req.user;
-    const user = await User.findById(userId);
-    if (!user) {
-        next(ApiError.UnauthorizedError("faild role", "no role"));
+    const user = await User.findById( userId );
+    if ( !user ) {
+        await next( ApiError.UnauthorizedError( "faild role", "no role" ) );
     } else {
         const { role } = user;
-        if (permissions.includes(role)) {
+        if ( permissions.includes( role ) ) {
             await next();
         } else {
-            next(ApiError.ForbiddenError("no permession"));
+            logger.error( "error", "no premession" )
+            await next( ApiError.ForbiddenError( "no permession" ) );
         }
     }
 };
