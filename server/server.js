@@ -8,6 +8,7 @@ const { logger } = require("../src/logger/logger");
 const path = require("path");
 const { userRouter } = require("../src/routes/user.routes");
 const mongoDb = require("../connection/connectionMongo");
+const { authRouter } = require("../src/routes/auth.routes");
 // create app server
 const app = express()
 
@@ -32,6 +33,7 @@ if (app.get("env") === "development") {
 }
 
 app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 // ANCHOR error handler
 app.use(errorHandler);

@@ -16,6 +16,16 @@ const userSchema = new Schema({
     }
 })
 
+const tokenSchema = new Schema({
+    tokenId: {
+        type: String,
+    },
+    UserId: {
+        type: String
+    }
+})
+
 module.exports = {
-    User: model("User", userSchema)
+    User: model("User", userSchema),
+    Token: model("Token", tokenSchema)
 }

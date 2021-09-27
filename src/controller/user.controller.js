@@ -25,11 +25,49 @@ const createUser = async (req, res, next) => {
         await newUser.save();
         res.status(201).json({
             message: "yangi chichqo yaratildi 💩 😂",
-            data: newUser
+            data: {
+                id: newUser.id,
+                username: newUser.username
+            }
         });
     }
 }
 
+const getUsers = async (req, res, next) => {
+    const users = await User.find()
+    if (users) {
+        res.status(200).json({
+            message: "all users",
+            data: users.map(el => ({
+                id: el.id,
+                username: el.username
+            }))
+        })
+    } else {
+        logger.error(error);
+        next(ApiError.NotFoundError("user not founded or some error"));
+    }
+}
+
+const getUser = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId)
+        res.status(200).json({
+            message: "single user data",
+            data: {
+                id: user.id,
+                username: user.username
+            }
+        })
+    } catch (error) {
+        logger.error(error);
+        next(ApiError.BadRequestError(error, "wrong user id"));
+    }
+}
+
 module.exports = {
-    createUser
+    createUser,
+    getUsers,
+    getUser
 }
