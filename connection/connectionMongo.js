@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const config = require("config")
-const mongoDb = async () => await mongoose.connect(config.get("mongoUri"), {
+const mongoDb = async () => await mongoose.connect(config.get("mongoUriWork"), {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, () => {

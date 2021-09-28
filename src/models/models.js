@@ -13,6 +13,15 @@ const userSchema = new Schema({
     role: {
         type: String,
         default: "user"
+    },
+    firstName: {
+        type: String,
+    },
+    middleName: {
+        type: String
+    },
+    lastName: {
+        type: String
     }
 })
 
@@ -25,7 +34,22 @@ const tokenSchema = new Schema({
     }
 })
 
+const productSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+    },
+    owner: {
+        type: String,
+        ref: "User"
+    }
+})
+
 module.exports = {
     User: model("User", userSchema),
-    Token: model("Token", tokenSchema)
+    Token: model("Token", tokenSchema),
+    Product: model("Product", productSchema)
 }
