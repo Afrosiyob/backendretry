@@ -6,7 +6,7 @@ const { Token } = require( "../models/models" );
 
 const generateAccessToken = ( userId ) => ( {
     accessToken: jwt.sign( { userId: userId, type: "access" },
-        config.get( "jwtSecret" ), { expiresIn: "3s" }
+        config.get( "jwtSecret" ), { expiresIn: "1d" }
     ),
 } );
 

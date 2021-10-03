@@ -1,81 +1,85 @@
-const { ApiError } = require("../errors/ApiError");
-const { logger } = require("../logger/logger");
-const { User } = require("../models/models");
-const bcrypt = require("bcryptjs");
+const { ApiError } = require( "../errors/ApiError" );
+const { logger } = require( "../logger/logger" );
+const { User } = require( "../models/models" );
+const bcrypt = require( "bcryptjs" );
 
-const createUser = async (req, res, next) => {
+const createUser = async ( req, res, next ) => {
     const { username, password } = req.body;
-    const user = await User.findOne({ username })
-    if (user) {
-        if (user instanceof User) {
-            logger.error("same username");
+    const user = await User.findOne( { username } )
+    if ( user ) {
+        if ( user instanceof User ) {
+            logger.error( "same username" );
             next(
                 ApiError.BadRequestError(
-                    `failed ${username}`,
+                    `failed ${ username }`,
                     "please enter other username"
                 )
             );
         }
     } else {
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const newUser = new User({
+        const hashedPassword = await bcrypt.hash( password, 12 );
+        const newUser = new User( {
             username,
             password: hashedPassword
-        })
+        } )
         await newUser.save();
-        res.status(201).json({
+        res.status( 201 ).json( {
             message: "yangi chichqo yaratildi 💩 😂",
             data: {
                 id: newUser.id,
                 username: newUser.username
             }
-        });
+        } );
     }
 }
 
-const getUsers = async (req, res, next) => {
+const getUsers = async ( req, res, next ) => {
     const users = await User.find()
-    if (users) {
-        res.status(200).json({
+    if ( users ) {
+        res.status( 200 ).json( {
             message: "all users",
-            data: users.map(el => ({
+            data: users.map( el => ( {
                 id: el.id,
                 username: el.username
-            }))
-        })
+
+            } ) )
+        } )
     } else {
-        logger.error(error);
-        next(ApiError.NotFoundError("user not founded or some error"));
+        logger.error( error );
+        next( ApiError.NotFoundError( "user not founded or some error" ) );
     }
 }
 
-const getUser = async (req, res, next) => {
+const getUser = async ( req, res, next ) => {
     try {
         const { userId } = req.params;
-        const user = await User.findById(userId)
-        res.status(200).json({
+        const user = await User.findById( userId )
+        res.status( 200 ).json( {
             message: "single user data",
             data: {
                 id: user.id,
-                username: user.username
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                middleName: user.middleName
             }
-        })
-    } catch (error) {
-        logger.error(error);
-        next(ApiError.BadRequestError(error, "wrong user id"));
+        } )
+    } catch ( error ) {
+        logger.error( error );
+        next( ApiError.BadRequestError( error, "wrong user id" ) );
     }
 }
 
-const updateUser = async (req, res, next) => {
+const updateUser = async ( req, res, next ) => {
     const { userId } = req.params
     const { username, password, firstName, middleName, lastName } = req.body
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const updatedUser = await User.findByIdAndUpdate(userId, { username, password: hashedPassword, firstName, middleName, lastName }, { new: true })
-    if (!updatedUser) {
-        logger.error("error", "user cannot updated")
-        next(ApiError.NotFoundError("user not founded"))
+    const hashedPassword = await bcrypt.hash( password, 12 );
+    const updatedUser = await User.findByIdAndUpdate( userId, { username, password: hashedPassword, firstName, middleName, lastName }, { new: true } )
+    if ( !updatedUser ) {
+        logger.error( "error", "user cannot updated" )
+        next( ApiError.NotFoundError( "user not founded" ) )
     } else {
-        res.status(200).json({
+        res.status( 200 ).json( {
             message: "user updated",
             data: {
                 id: updatedUser.id,
@@ -84,20 +88,20 @@ const updateUser = async (req, res, next) => {
                 lastName: updatedUser.lastName,
                 middleName: updatedUser.middleName
             }
-        })
+        } )
     }
 }
 
-const deleteUser = async (req, res, next) => {
+const deleteUser = async ( req, res, next ) => {
     const { userId } = req.params
-    const deletedUser = await User.findByIdAndRemove(userId)
-    if (deletedUser) {
-        res.status(200).json({
+    const deletedUser = await User.findByIdAndRemove( userId )
+    if ( deletedUser ) {
+        res.status( 200 ).json( {
             message: "user success deleted"
-        })
+        } )
     } else {
-        logger.error("error", "user cannt deleted")
-        next(ApiError.BadRequestError("error", "user cannot deleted or cannot founded this user"))
+        logger.error( "error", "user cannt deleted" )
+        next( ApiError.BadRequestError( "error", "user cannot deleted or cannot founded this user" ) )
     }
 }
 
