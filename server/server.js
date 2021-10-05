@@ -43,6 +43,7 @@ app.use("/api/auth", authRouter);
 // ANCHOR error handler
 app.use(errorHandler);
 
-const PORT = config.get("PORT") || process.env.PORT || 5000;
+const { PORT = 5000, LOCAL_ADDRESS = '0.0.0.0' } = process.env
 
-app.listen(PORT, mongoDb);
+
+app.listen(PORT, LOCAL_ADDRESS, mongoDb);
