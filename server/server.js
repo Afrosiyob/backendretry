@@ -10,6 +10,7 @@ const { userRouter } = require("../src/routes/user.routes");
 const mongoDb = require("../connection/connectionMongo");
 const { authRouter } = require("../src/routes/auth.routes");
 const { productRouter } = require("../src/routes/product.routes");
+const { indexRouter } = require("../src/routes/index.route");
 // create app server
 const app = express()
 
@@ -33,10 +34,7 @@ if (app.get("env") === "development") {
     );
 }
 
-app.use("/", (req, res, next) => {
-    res.writeHead(200, { "Content-Type": "text/plain" })
-    res.end("hello world")
-})
+app.use("/", indexRouter);
 
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
