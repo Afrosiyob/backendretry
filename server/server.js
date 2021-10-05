@@ -33,6 +33,11 @@ if (app.get("env") === "development") {
     );
 }
 
+app.use("/", (req, res, next) => {
+    res.writeHead(200, { "Content-Type": "text/plain" })
+    res.end("hello world")
+})
+
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/auth", authRouter);
