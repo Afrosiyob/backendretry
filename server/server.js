@@ -41,7 +41,7 @@ app.use(errorHandler);
 
 console.log(process.env);
 
-const { PORT, LOCAL_ADDRESS } = process.env
+const { PORT = 5000, LOCAL_ADDRESS = '0.0.0.0' } = process.env
 
 
 app.listen(PORT, LOCAL_ADDRESS, mongoDb);
