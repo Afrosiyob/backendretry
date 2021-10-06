@@ -90,5 +90,4 @@ module.exports = {
     checkAuthToken,
     setPermissions,
     getProductsList
-
 };
