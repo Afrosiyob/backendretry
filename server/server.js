@@ -9,6 +9,7 @@ const mongoDb = require("../connection/connectionMongo");
 const { authRouter } = require("../src/routes/auth.routes");
 const { productRouter } = require("../src/routes/product.routes");
 const { indexRouter } = require("../src/routes/index.routes");
+
 require('dotenv').config()
 // create app server
 const app = express()
@@ -38,8 +39,6 @@ app.use("/api/auth", authRouter);
 
 // ANCHOR error handler
 app.use(errorHandler);
-
-console.log(process.env);
 
 const { PORT = 5000, LOCAL_ADDRESS = '0.0.0.0' } = process.env
 
