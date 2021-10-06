@@ -3,24 +3,28 @@ const { logger } = require("../logger/logger");
 const { Product } = require("../models/models");
 
 const createProduct = async (req, res, next) => {
-    const { name, description } = req.body;
-    const { userId } = req.user;
-    const product = await Product.findOne({ name })
-    if (product) {
-        logger.error("error", "error please enter other product name")
-        next(ApiError.BadRequestError("error", " please enter other name "))
-    } else {
-        const newProduct = new Product({
-            name,
-            description,
-            owner: userId
-        })
-        await newProduct.save()
-        res.status(201).json({
-            message: "new product created",
-            data: newProduct,
-
-        })
+    try {
+        const { name, description } = req.body;
+        const { userId } = req.user;
+        const product = await Product.findOne({ name })
+        if (product) {
+            logger.error("error", "error please enter other product name")
+            next(ApiError.BadRequestError("error", " please enter other name "))
+        } else {
+            const newProduct = new Product({
+                name,
+                description,
+                owner: userId
+            })
+            await newProduct.save()
+            res.status(201).json({
+                message: "new product created",
+                data: newProduct,
+            })
+        }
+    } catch (error) {
+        logger.error(error)
+        next(ApiError.ServerError("server error"))
     }
 }
 
@@ -34,19 +38,23 @@ const getProducts = async (req, res, next) => {
 };
 
 const getProduct = async (req, res, next) => {
-    const { productId } = req.params
-    const product = await Product.findById(productId)
-    if (product) {
-        res.status(200).json({
-            message: "single product",
-            data: product
-        })
-    } else {
-        logger.error("product not founded")
-        next(ApiError.BadRequestError("error", "product not founded"))
+    try {
+        const { productId } = req.params
+        const product = await Product.findById(productId)
+        if (product) {
+            res.status(200).json({
+                message: "single product",
+                data: product
+            })
+        } else {
+            logger.error("product not founded")
+            next(ApiError.BadRequestError("error", "product not founded"))
+        }
+    } catch (error) {
+        logger.error(error)
+        next(ApiError.ServerError("server error"))
     }
 }
-
 
 const updateProduct = async (req, res, next) => {
     try {
@@ -67,7 +75,6 @@ const updateProduct = async (req, res, next) => {
         next(ApiError.ServerError("server error"))
     }
 }
-
 
 const deleteProduct = async (req, res, next) => {
     try {

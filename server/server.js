@@ -1,7 +1,5 @@
 const express = require("express");
-
 const winston = require("winston");
-const config = require("config");
 const { errorHandler } = require("../src/errors/ErrorHandler");
 const morgan = require("morgan");
 const { logger } = require("../src/logger/logger");
@@ -10,7 +8,8 @@ const { userRouter } = require("../src/routes/user.routes");
 const mongoDb = require("../connection/connectionMongo");
 const { authRouter } = require("../src/routes/auth.routes");
 const { productRouter } = require("../src/routes/product.routes");
-const { indexRouter } = require("../src/routes/index.route");
+const { indexRouter } = require("../src/routes/index.routes");
+
 // create app server
 const app = express()
 
@@ -18,10 +17,8 @@ const app = express()
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 
-
 // second way create static files
 app.use("/public", express.static(path.join(__dirname, "public")));
-
 
 // ANCHOR show request to console only development
 if (app.get("env") === "development") {
@@ -35,7 +32,6 @@ if (app.get("env") === "development") {
 }
 
 app.use("/", indexRouter);
-
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/auth", authRouter);
