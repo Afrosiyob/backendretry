@@ -10,7 +10,7 @@ const { authRouter } = require("../src/routes/auth.routes");
 const { productRouter } = require("../src/routes/product.routes");
 const { indexRouter } = require("../src/routes/index.routes");
 
-require('dotenv').config()
+// require('dotenv').config()
 // create app server
 const app = express()
 
