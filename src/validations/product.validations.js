@@ -5,6 +5,12 @@ const productCreateValidation = [
 
 ];
 
+const productUpdatedValidation = [
+    check("name", "enter name").isLength({ min: 3 }),
+    check("description", "enter name").exists()
+]
+
 module.exports = {
     productCreateValidation,
+    productUpdatedValidation
 };
