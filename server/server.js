@@ -10,9 +10,39 @@ const { authRouter } = require( "../src/routes/auth.routes" );
 const { productRouter } = require( "../src/routes/product.routes" );
 const { indexRouter } = require( "../src/routes/index.routes" );
 
+const swaggerUi = require( 'swagger-ui-express' );
+const swaggerJSDoc = require( 'swagger-jsdoc' );
+
 // require('dotenv').config()
 // create app server
 const app = express()
+
+const cors = require( 'cors' )
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Library API",
+            version: "1.0.0",
+            description: "A simple Express Backend"
+        },
+        servers: [
+            {
+                url: "http://localhost:5000"
+            }
+        ],
+    },
+    apis: [ "../src/routes/*.js" ]
+}
+
+
+const swaggerSpec = swaggerJSDoc( options );
+
+app.use( '/api-docs', swaggerUi.serve, swaggerUi.setup( swaggerSpec ) );
+
+// cors
+app.use( cors() )
 
 // set access json req.body
 app.use( express.json( { extended: true } ) );
@@ -36,6 +66,9 @@ app.use( "/", indexRouter );
 app.use( "/api/user", userRouter );
 app.use( "/api/product", productRouter );
 app.use( "/api/auth", authRouter );
+
+
+
 
 // ANCHOR error handler
 app.use( errorHandler );

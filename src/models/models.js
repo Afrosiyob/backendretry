@@ -1,6 +1,6 @@
-const { Schema, model, Types } = require("mongoose")
+const { Schema, model, Types } = require( "mongoose" )
 
-const userSchema = new Schema({
+const userSchema = new Schema( {
     username: {
         type: String,
         required: true
@@ -23,18 +23,18 @@ const userSchema = new Schema({
     lastName: {
         type: String
     }
-})
+} )
 
-const tokenSchema = new Schema({
+const tokenSchema = new Schema( {
     tokenId: {
         type: String,
     },
     UserId: {
         type: String
     }
-})
+} )
 
-const productSchema = new Schema({
+const productSchema = new Schema( {
     name: {
         type: String,
         required: true
@@ -46,10 +46,10 @@ const productSchema = new Schema({
         type: Types.ObjectId,
         ref: "User"
     }
-})
+} )
 
 module.exports = {
-    User: model("User", userSchema),
-    Token: model("Token", tokenSchema),
-    Product: model("Product", productSchema)
+    User: model( "User", userSchema ),
+    Token: model( "Token", tokenSchema ),
+    Product: model( "Product", productSchema )
 }
