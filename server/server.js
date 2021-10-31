@@ -11,35 +11,16 @@ const { productRouter } = require( "../src/routes/product.routes" );
 const { indexRouter } = require( "../src/routes/index.routes" );
 
 const swaggerUi = require( 'swagger-ui-express' );
-const swaggerJSDoc = require( 'swagger-jsdoc' );
+const swaggerDocument = require( '../doc/swagger.json' )
+
+const cors = require( 'cors' )
 
 // require('dotenv').config()
 // create app server
 const app = express()
 
-const cors = require( 'cors' )
-
-const options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "Library API",
-            version: "1.0.0",
-            description: "A simple Express Backend"
-        },
-        servers: [
-            {
-                url: "http://localhost:5000"
-            }
-        ],
-    },
-    apis: [ "../src/routes/*.js" ]
-}
-
-
-const swaggerSpec = swaggerJSDoc( options );
-
-app.use( '/api-docs', swaggerUi.serve, swaggerUi.setup( swaggerSpec ) );
+// swagger doc
+app.use( '/api-docs', swaggerUi.serve, swaggerUi.setup( swaggerDocument ) );
 
 // cors
 app.use( cors() )

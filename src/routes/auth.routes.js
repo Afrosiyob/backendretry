@@ -5,6 +5,17 @@ const { authLoginValidation } = require( "../validations/auth.validations" );
 
 const router = Router();
 
+/**
+ * @swagger
+ * /auth:
+ *  get:
+ *   description: Use to auth
+ *   response:
+ *    '200':
+ *     description: A successful response
+ * 
+ *      
+ */
 
 router.post( "/login", authLoginValidation, validationError, authLogin );
 router.get( "/logout", checkAuthToken, authLogout );
