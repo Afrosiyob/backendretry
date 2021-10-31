@@ -15,6 +15,10 @@
     {
       "name": "Users",
       "description": "API for users in the system"
+    },
+    {
+      "name": "Auth",
+      "description": "API for auth in the system"
     }
   ],
   "schemes": ["http"],
@@ -113,6 +117,11 @@
             }
           }
         }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Auth"]
       }
     }
   },

@@ -43,6 +43,8 @@ if ( app.get( "env" ) === "development" ) {
     );
 }
 
+
+
 app.use( "/", indexRouter );
 app.use( "/api/user", userRouter );
 app.use( "/api/product", productRouter );
